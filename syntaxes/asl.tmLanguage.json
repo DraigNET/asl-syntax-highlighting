@@ -72,6 +72,27 @@
     "textProcessor": {
       "patterns": [
         {
+          "name": "meta.quest.text-processor.link.asl",
+          "match": "\\{(object|command|exit|page|once|notfirst|random|either):[^}]+\\}"
+        },
+        {
+          "name": "meta.quest.text-processor.conditional.asl",
+          "begin": "\\{(if|if not|else if|else|firsttime):",
+          "end": "\\}",
+          "patterns": [
+            { "include": "#strings" },
+            { "include": "#numbers" },
+            { "include": "#keywords" },
+            { "include": "#operators" },
+            { "include": "#functionCalls" },
+            { "include": "#variables" }
+          ]
+        },
+        {
+          "name": "meta.quest.text-processor.directive.asl",
+          "match": "\\{/?[A-Za-z][A-Za-z0-9_ -]*(?::[^}]*)?\\}"
+        },
+        {
           "name": "variable.other.text-processor.asl",
           "match": "#[A-Za-z_][A-Za-z0-9_.\\[\\]]*#|%[A-Za-z_][A-Za-z0-9_.\\[\\]]*%"
         },
@@ -152,3 +173,4 @@
     }
   }
 }
+

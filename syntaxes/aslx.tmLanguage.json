@@ -2,10 +2,10 @@
   "name": "Quest ASLX",
   "scopeName": "text.xml.aslx",
   "fileTypes": ["aslx"],
-  "firstLineMatch": "^\\s*(<\\?xml\\b|<(asl|library)\\b)",
+  "firstLineMatch": "^\\s*(<!--.*?-->)?\\s*(<\\?xml\\b|<(asl|library)\\b)",
   "patterns": [
     { "include": "#scriptElements" },
-    { "include": "#cdataScript" },
+    { "include": "#textElements" },
     { "include": "#questTags" },
     { "include": "text.xml" }
   ],
@@ -13,8 +13,8 @@
     "scriptElements": {
       "patterns": [
         {
-          "name": "meta.element.script.aslx",
-          "begin": "(<)(script|startscript|changedscript|enter|leave|beforeenter|beforeleave|description|look|take|drop|use|speak|give|command|verb|function|turnscript|timer|walkthrough|expression)\\b([^>]*>)",
+          "name": "meta.element.script.typed.aslx",
+          "begin": "(<)([A-Za-z_][A-Za-z0-9_.-]*)(?=[^>]*\\btype\\s*=\\s*\"script\")([^>]*>)",
           "beginCaptures": {
             "1": { "name": "punctuation.definition.tag.begin.xml" },
             "2": { "name": "entity.name.tag.script.aslx" },
@@ -33,14 +33,70 @@
           },
           "contentName": "source.asl",
           "patterns": [
-            { "include": "#cdataScript" },
+            { "include": "#cdataAsl" },
+            { "include": "text.xml" },
+            { "include": "source.asl" }
+          ]
+        },
+        {
+          "name": "meta.element.script.aslx",
+          "begin": "(<)(script|function|startscript|changedscript)\\b([^>]*>)",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.tag.begin.xml" },
+            "2": { "name": "entity.name.tag.script.aslx" },
+            "3": {
+              "name": "meta.tag.attributes.xml",
+              "patterns": [
+                { "include": "text.xml" }
+              ]
+            }
+          },
+          "end": "(</)(\\2)(\\s*>)",
+          "endCaptures": {
+            "1": { "name": "punctuation.definition.tag.begin.xml" },
+            "2": { "name": "entity.name.tag.script.aslx" },
+            "3": { "name": "punctuation.definition.tag.end.xml" }
+          },
+          "contentName": "source.asl",
+          "patterns": [
+            { "include": "#cdataAsl" },
             { "include": "text.xml" },
             { "include": "source.asl" }
           ]
         }
       ]
     },
-    "cdataScript": {
+    "textElements": {
+      "patterns": [
+        {
+          "name": "meta.element.text.aslx",
+          "begin": "(<)(description|look|alias|prefix|suffix|alt|pattern|text|template|dynamictemplate|value|key|category|cover|author|version|firstpublished|gameid|location|pov)\\b([^>]*>)",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.tag.begin.xml" },
+            "2": { "name": "entity.name.tag.text.aslx" },
+            "3": {
+              "name": "meta.tag.attributes.xml",
+              "patterns": [
+                { "include": "text.xml" }
+              ]
+            }
+          },
+          "end": "(</)(\\2)(\\s*>)",
+          "endCaptures": {
+            "1": { "name": "punctuation.definition.tag.begin.xml" },
+            "2": { "name": "entity.name.tag.text.aslx" },
+            "3": { "name": "punctuation.definition.tag.end.xml" }
+          },
+          "contentName": "string.unquoted.text.aslx",
+          "patterns": [
+            { "include": "#cdataText" },
+            { "include": "#textProcessor" },
+            { "include": "text.xml" }
+          ]
+        }
+      ]
+    },
+    "cdataAsl": {
       "name": "string.unquoted.cdata.aslx",
       "begin": "<!\\[CDATA\\[",
       "beginCaptures": {
@@ -54,19 +110,70 @@
         { "include": "source.asl" }
       ]
     },
+    "cdataText": {
+      "name": "string.unquoted.cdata.aslx",
+      "begin": "<!\\[CDATA\\[",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.string.begin.xml" }
+      },
+      "end": "\\]\\]>",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.xml" }
+      },
+      "patterns": [
+        { "include": "#textProcessor" },
+        { "include": "text.xml" }
+      ]
+    },
+    "textProcessor": {
+      "patterns": [
+        {
+          "name": "meta.quest.text-processor.link.aslx",
+          "match": "\\{(object|command|exit|page|once|notfirst|random|either):[^}]+\\}"
+        },
+        {
+          "name": "meta.quest.text-processor.conditional.aslx",
+          "begin": "\\{(if|if not|else if|else|firsttime):",
+          "end": "\\}",
+          "patterns": [
+            { "include": "source.asl" }
+          ]
+        },
+        {
+          "name": "meta.quest.text-processor.directive.aslx",
+          "match": "\\{/?[A-Za-z][A-Za-z0-9_ -]*(?::[^}]*)?\\}"
+        },
+        {
+          "name": "variable.other.text-processor.aslx",
+          "match": "#[A-Za-z_][A-Za-z0-9_.\\[\\]]*#|%[A-Za-z_][A-Za-z0-9_.\\[\\]]*%"
+        },
+        {
+          "name": "entity.name.function.text-processor.aslx",
+          "match": "\\$[A-Za-z_][A-Za-z0-9_]*\\([^$]*\\)\\$"
+        },
+        {
+          "name": "keyword.control.format.aslx",
+          "match": "\\|(x?[biun]|c[brygl]|j[lcr]|s[0-9]{2}|[wc])\\b?"
+        }
+      ]
+    },
     "questTags": {
       "patterns": [
         {
           "name": "entity.name.tag.quest.aslx",
-          "match": "(?<=</?)(asl|library|include|template|dynamictemplate|verbtemplate|function|command|verb|type|game|object|exit|walkthrough|timer|turnscript|implied|delegate|javascript|editor|tab|control|resource|inherit)(?=\\s|/?>)"
+          "match": "(?<=</?)(asl|library|include|template|dynamictemplate|verbtemplate|function|command|verb|type|game|object|exit|walkthrough|timer|turnscript|implied|delegate|javascript|editor|tab|control|resource|inherit|attr|item|key|value|statusattributes|displayverbs|take|drop|locked|scenery|feature_usegive|showcompass|showplaces|showobjects|showscore)(?=\\s|/?>)"
         },
         {
           "name": "entity.other.attribute-name.quest.aslx",
-          "match": "\\b(name|type|parent|to|alias|pattern|unresolved|template|parameters|return|enabled|changed|inherit|src|language|version|author|category|displayverbs|inventoryverbs)\\b(?=\\s*=)"
+          "match": "\\b(name|type|parent|to|alias|pattern|unresolved|template|parameters|return|enabled|changed|inherit|src|language|version|author|category|displayverbs|inventoryverbs|ref)\\b(?=\\s*=)"
         },
         {
-          "name": "variable.other.placeholder.aslx",
-          "match": "#[A-Za-z_][A-Za-z0-9_]*#"
+          "name": "constant.language.boolean.aslx",
+          "match": "(?<=>)(true|false)(?=</)"
+        },
+        {
+          "name": "constant.numeric.aslx",
+          "match": "(?<=>)\\d+(?:\\.\\d+)?(?=</)"
         }
       ]
     }
