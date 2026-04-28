@@ -1,0 +1,729 @@
+<!--Saved by Quest 5.9.9166.36226-->
+<asl version="580">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="LAPD: The Missing Evidence">
+    <gameid>bd8d21b6-fda8-4d7a-a849-08f46470e0fa</gameid>
+    <author>DraigNET Studios</author>
+    <version>2.0</version>
+    <firstpublished>2025</firstpublished>
+    <showcompass />
+    <showplaces />
+    <showobjects />
+    <showscore />
+    <category>Puzzle</category>
+    <cover>cover-art.png</cover>
+    <description><![CDATA[Step into the trench coat of a 1950s Los Angeles detective in this story-driven interactive mystery. A high-profile murder has rocked the city. Evidence has gone missing, suspects are vanishing into the neon-lit streets, and your captain wants answers before the press smells corruption. Explore the LAPD Detective Bureau, prowl alleys, search crime scenes, raid pawn shops and pull strings across a sprawling mid-century Los Angeles.<br/><br/>You will collect fingerprints, swab for DNA, decrypt burner phones, scour CCTV footage and pry open safes. Each clue brings you closer to motive, opportunity and proof. Return to the bureau to present a rock-solid case before time runs out and your captain loses patience.<br/><br/>This game combines classic text-adventure gameplay with modern detective tools. It features a noir atmosphere, a tough but fair captain keeping you on task, and multiple ways to discover evidence depending on your decisions. Your badge, your brain and your gut are all you have. Can you close the case before the trail goes cold?<br/>    ]]></description>
+    <statusattributes type="stringdictionary">
+      <item>
+        <key>evidence_found</key>
+        <value>Evidence: !/12</value>
+      </item>
+    </statusattributes>
+    <attr name="feature_advancedscripts" type="boolean">false</attr>
+    <score type="int">0</score>
+    <attr name="evidence_found" type="int">0</attr>
+    <attr name="evidence_goal" type="int">12</attr>
+    <attr name="wrong_code_attempts" type="int">0</attr>
+    <pov type="object">player</pov>
+    <start type="script">
+    </start>
+  </game>
+  <object name="case_state">
+    <attr name="evidence_found" type="int">0</attr>
+    <attr name="vega_located" type="boolean">false</attr>
+    <attr name="locker_opened" type="boolean">false</attr>
+    <attr name="safe_opened" type="boolean">false</attr>
+    <attr name="dumpster_checked" type="boolean">false</attr>
+    <attr name="lab_unlocked" type="boolean">false</attr>
+    <attr name="cctv_unlocked" type="boolean">false</attr>
+    <attr name="warehouse_unlocked" type="boolean">false</attr>
+    <attr name="morgue_seen" type="boolean">false</attr>
+    <attr name="motive_established" type="boolean">false</attr>
+    <attr name="phone_decrypted" type="boolean">false</attr>
+    <attr name="pier_unlocked" type="boolean">false</attr>
+    <attr name="crime_scene_processed" type="boolean">false</attr>
+    <attr name="ballistics_done" type="boolean">false</attr>
+    <attr name="fingerprints_done" type="boolean">false</attr>
+    <attr name="dna_done" type="boolean">false</attr>
+    <attr name="cctv_done" type="boolean">false</attr>
+    <attr name="warehouse_searched" type="boolean">false</attr>
+    <attr name="pier_searched" type="boolean">false</attr>
+  </object>
+  <object name="precinct">
+    <inherit name="editor_room" />
+    <alias>LAPD Detective Bureau</alias>
+    <description>You stand in the LAPD Detective Bureau. Your messy {object:desk:desk} is to the south, the {object:evidence_room:Evidence Room} is to the west, the morgue stairs lead north, and the city {object:street:streets} lie east. {object:captain_morales:Captain Morales} is here, arms folded.</description>
+    <exit alias="west" to="evidence_room" />
+    <exit alias="east" to="street" />
+    <exit alias="south" to="desk" />
+    <exit alias="north" to="morgue" />
+    <object name="player">
+      <inherit name="defaultplayer" />
+    </object>
+    <object name="captain_morales">
+      <inherit name="namedmale" />
+      <inherit name="editor_object" />
+      <alias>Captain Morales</alias>
+      <description>Your CO. Tough, fair, and very done with paperwork.</description>
+      <location>precinct</location>
+      <scenery type="boolean">false</scenery>
+      <drop type="boolean">false</drop>
+      <displayverbs type="stringlist">
+        <value>Look at</value>
+      </displayverbs>
+      <look><![CDATA[Captain Morales stands like a brick wall in a crisp white shirt, sleeves rolled up, tie crooked but deliberate. His eyes are sharp — the kind that can read a confession before a word’s spoken. The years have carved lines into his face, half from worry, half from whiskey. He’s seen every kind of cop this city breeds — the rookies, the burnouts, the ones who still believe justice has clean hands. You’re not sure which one he thinks you are.<br/><br/>When you've collected all the evidence, come back and {command:Present Evidence}.]]></look>
+      <speak type="script">
+        TalkToCaptain
+      </speak>
+    </object>
+  </object>
+  <object name="desk">
+    <inherit name="editor_room" />
+    <alias>Your Desk</alias>
+    <description>Papers, coffee rings, and a blinking voicemail light. Your {object:case_file:case file} is here. A corkboard shows an old map with pins. North returns to the bureau.</description>
+    <exit alias="north" to="precinct" />
+    <object name="case_file">
+      <inherit name="editor_object" />
+      <alias>Case File</alias>
+      <description>The murder case file. It mentions suspect Marcus Vega, last known address downtown.</description>
+      <take />
+      <location>desk</location>
+      <look><![CDATA[<b>Case File – Homicide: Victim – Daniel Cross</b><br/><br/>Cross, Daniel J. — local art dealer, shot once in the chest in his downtown loft. Neighbours report raised voices the night of 04/05. No forced entry.<br/><br/><b>Suspect: Marcus Vega</b><br/><b>D.O.B:</b> March 12, 1921 (age 34)<br/>Known to drift between cheap downtown rentals; current residence uncertain.<br/><br/><b>Employment: </b>Former dockhand; dismissed 1947 after theft allegations.<br/><b>Criminal record:</b> Petty larceny (1942), assault (1946).<br/><b>Associates: </b>Local loan shark circles; suspected weapons trafficking.<br/><b>Financial: </b>Gambling debts, threats from loan collectors. Considered armed and dangerous.<br/><b>Notes:</b> <i>Vega reportedly has an estranged daughter, Rosa Vega (b. May 4, 1939). Investigators believe he still keeps personal mementos of her. Neighbours describe him as volatile when family is mentioned.</i>]]></look>
+    </object>
+  </object>
+  <object name="evidence_room">
+    <inherit name="editor_room" />
+    <alias>Evidence Room</alias>
+    <description>Rows of metal shelves and sealed bags. A lockable {object:gun_locker:gun locker} sits against the far wall; a labeled {object:shelf_fingerprint:shelf} holds kits. South is the forensic lab. East goes back to the bureau.</description>
+    <exit alias="east" to="precinct" />
+    <exit alias="south" to="forensic_lab" />
+    <object name="gun_locker">
+      <inherit name="editor_object" />
+      <alias>Gun Locker</alias>
+      <look><![CDATA[A heavy steel locker with a faded <b>PROPERTY OF LAPD</b> stencil across the front. Its paint is chipped from years of use, and a brass keyhole sits just beneath a battered handle. You know this is where firearms and other sensitive case materials are kept under lock and key.<br/><br/>You can unlock the gun locker with the evidence key: {command:Unlock locker}]]></look>
+    </object>
+    <object name="shelf_fingerprint">
+      <inherit name="editor_object" />
+      <look>A waist-high metal shelf stacked with fingerprint kits — powder, brushes, lifting tape, and evidence cards. Smudges of black dust stain the surface, and half-used rolls of tape hang off the edge. Detectives stop here before heading out to process crime scenes.</look>
+      <alias>Shelf</alias>
+    </object>
+  </object>
+  <object name="morgue">
+    <inherit name="editor_room" />
+    <alias>County Morgue</alias>
+    <description>Fluorescent lights buzz over steel tables and tiled drains. Dr. Harlan keeps Daniel Cross's body under a clean sheet. You can {command:Examine Body}. South returns to the bureau.</description>
+    <exit alias="south" to="precinct" />
+    <object name="dr_harlan">
+      <inherit name="namedmale" />
+      <inherit name="editor_object" />
+      <alias>Dr. Harlan</alias>
+      <description>The coroner has ink on his cuffs, formaldehyde on his sleeves, and no patience for sloppy police work.</description>
+      <look>Dr. Harlan taps the clipboard with one finger. He has already found something the first patrolmen missed.</look>
+    </object>
+  </object>
+  <object name="forensic_lab">
+    <inherit name="editor_room" />
+    <alias>Forensic Lab</alias>
+    <description>Microscopes, chemical trays, drying racks, and a temperamental wire recorder crowd the lab benches. This is where you can {command:Dust Fingerprints}, {command:Compare Ballistics}, {command:Process DNA}, or {command:Decrypt Phone}. North returns to the evidence room.</description>
+    <exit alias="north" to="evidence_room" />
+  </object>
+  <object name="street">
+    <inherit name="editor_room" />
+    <alias>Downtown LA</alias>
+    <description>Neon buzzes. A dark {object:alley:alley} leads north; your {object:car:unmarked car} waits south. West is the precinct. A sign points east toward a {object:pawn_shop:Pawn Shop}. A police seal flaps northeast at Cross's loft.</description>
+    <exit alias="west" to="precinct" />
+    <exit alias="north" to="alley" />
+    <exit alias="south" to="car" />
+    <exit alias="east" to="pawn_shop" />
+    <exit alias="northeast" to="crime_scene" />
+  </object>
+  <object name="crime_scene">
+    <inherit name="editor_room" />
+    <alias>Daniel Cross's Loft</alias>
+    <description>The dead art dealer's loft is all hard shadows, expensive canvases, and one dark stain on the parquet. A broken whiskey glass glitters near the bar; you can {command:Swab Glass}. Southwest returns downtown.</description>
+    <exit alias="southwest" to="street" />
+    <object name="broken_glass">
+      <inherit name="editor_object" />
+      <alias>Broken Whiskey Glass</alias>
+      <look>The rim is cracked. One shard carries a reddish smear too deliberate to ignore.</look>
+    </object>
+    <object name="bullet_hole">
+      <inherit name="editor_object" />
+      <alias>Bullet Hole</alias>
+      <look>A clean entry mark scars the wall panel behind where Cross fell. The angle suggests the shooter stood close, calm, and familiar.</look>
+    </object>
+  </object>
+  <object name="car">
+    <inherit name="editor_room" />
+    <alias>Unmarked LAPD Car</alias>
+    <description>Stale coffee and a rattling AC. The onboard {object:computer:computer} hums. North returns to the street.</description>
+    <exit alias="north" to="street" />
+    <object name="computer">
+      <inherit name="editor_object" />
+      <alias>Computer</alias>
+      <description><![CDATA[In-car computer. Try typing search <name>.]]></description>
+      <scenery type="boolean">false</scenery>
+      <look><![CDATA[<b>--------------------------------------------------------------------------<br/>   LAPD MOBILE DATA COMPUTER — SYSTEM ONLINE<br/>--------------------------------------------------------------------------</b><br/><b>USER:</b> DETECTIVE 2ND GRADE [LOGGED IN]<br/><b>CASE</b>: 54-2198  — HOMICIDE — OPEN<br/><br/>> Available commands:<br/>   <b>SEARCH <NAME></b>    — Query criminal database<br/>   <b>DMV <PLATE></b>      — Vehicle registration lookup<br/>   <b>WARRANTS </b>        — Outstanding warrants summary<br/>   <b>HELP</b>             — Command reference<br/><br/><b>STATUS:</b> Radio link nominal | Evidence sync enabled<br/>------------------------------------------------------------<br/>READY FOR INPUT…<br/>]]></look>
+    </object>
+  </object>
+  <object name="alley">
+    <inherit name="editor_room" />
+    <alias>Dark Alley</alias>
+    <description>Trash bins, graffiti, and a humming transformer. A suspicious {object:dumpster:dumpster} sits by the wall. South returns downtown.</description>
+    <exit alias="south" to="street" />
+    <object name="dumpster">
+      <inherit name="editor_object" />
+      <alias>Dumpster</alias>
+      <description>Smells awful, but might hide something.</description>
+      <scenery type="boolean">false</scenery>
+      <look><![CDATA[The alley reeks of rot and rain. A dented steel dumpster squats beside the wall, its lid half-open and buzzing with flies. Grease stains mark the concrete beneath. Something metallic clinks when the wind shifts — could be a bottle, could be a clue.<br/>The kind of place where evidence goes to hide until someone desperate enough comes looking. Perhaps something interesting can be found inside?]]></look>
+    </object>
+  </object>
+  <object name="pawn_shop">
+    <inherit name="editor_room" />
+    <alias>Alameda Pawn</alias>
+    <description type="script">
+      cctv_desc
+    </description>
+    <exit alias="west" to="street" />
+  </object>
+  <object name="cctv_hub">
+    <inherit name="editor_room" />
+    <alias>CCTV Closet</alias>
+    <description>A cramped closet with a DVR stack and dusty monitors. You can {command:Search CCTV}. North leads back to the pawn shop.</description>
+    <locked />
+    <exit alias="north" to="pawn_shop" />
+  </object>
+  <object name="warehouse">
+    <inherit name="editor_room" />
+    <alias>Seventh Street Warehouse</alias>
+    <description>Salt air, oil stains, and stacked import crates. A padlocked crate bears the same stencil from Vega's old dock crew. You can {command:Search Warehouse}. West leads back downtown.</description>
+    <exit alias="west" to="street" />
+    <object name="shipping_crate">
+      <inherit name="editor_object" />
+      <alias>Marked Shipping Crate</alias>
+      <look>The crate has been pried open and nailed shut again in a hurry. Fresh splinters catch under your thumb.</look>
+    </object>
+  </object>
+  <object name="pier">
+    <inherit name="editor_room" />
+    <alias>San Pedro Pier</alias>
+    <description>Fog rolls between pilings. A payphone hangs dead beside a bait shack, and tar-black water slaps the dock. You can {command:Search Pier}. East returns to the warehouse.</description>
+    <exit alias="east" to="warehouse" />
+    <object name="payphone">
+      <inherit name="editor_object" />
+      <alias>Payphone</alias>
+      <look>The receiver smells of tobacco and rain. A fresh scratch near the coin return suggests someone jammed it open recently.</look>
+    </object>
+  </object>
+  <object name="suspects_apartment">
+    <inherit name="editor_room" />
+    <alias>Suspect's Apartment</alias>
+    <description>A run-down one-bedroom. A locked {object:safe:safe} sits under the bed. A wobbly nightstand holds a cracked {object:burner_phone:Burner Phone}, and a dresser waits to be searched. South returns to the {object:alley:Alley}.</description>
+    <exit alias="south" to="alley" />
+    <object name="burner_phone">
+      <inherit name="editor_object" />
+      <alias>Burner Phone</alias>
+      <take />
+      <look>A cheap, black flip phone with a cracked screen and a prepaid SIM. The battery’s almost dead and there’s no signal.</look>
+    </object>
+    <object name="safe">
+      <inherit name="editor_object" />
+      <alias>Safe</alias>
+      <description>A small digital safe. You’ll need a code.</description>
+      <scenery type="boolean">false</scenery>
+      <look><![CDATA[A heavy steel safe sits wedged beneath the bed, its paint chipped and corners dented from years of use. The locking dial is a later addition — cheaper than the rest of the box but solid enough to keep casual thieves out.<br/>A small brass plate above the lock reads “Family First Security” and beneath it, faintly engraved initials: <b>R.V.</b><br/>It feels like something its owner would set to a number that means something only to him.<br/><br/>You can attempt to unlock the safe using <b>enter code ####</b>.]]></look>
+    </object>
+    <object name="dresser_drawer">
+      <inherit name="editor_object" />
+      <alias>Dresser Drawer</alias>
+      <look>A battered wooden dresser with two shallow drawers, one slightly ajar.</look>
+    </object>
+  </object>
+  <object name="evidence_key">
+    <inherit name="editor_object" />
+    <alias>Evidence Key</alias>
+    <description>A small brass key to the gun locker. Captain Morales might give it if you convince him.</description>
+    <take />
+  </object>
+  <object name="murder_weapon">
+    <inherit name="editor_object" />
+    <alias>Murder Weapon</alias>
+    <description>A 9mm pistol wrapped in bag #453. Vital to the case.</description>
+    <take />
+  </object>
+  <object name="suspect_mail">
+    <inherit name="editor_object" />
+    <alias>Stack of Mail</alias>
+    <description>Mail showing overdue rent and threats from a loan shark. Motive?</description>
+    <take />
+  </object>
+  <object name="fingerprint_lift">
+    <inherit name="editor_object" />
+    <alias>Fingerprint Lift</alias>
+    <description>A clean print lifted from the recovered pistol grip.</description>
+    <take />
+  </object>
+  <object name="ballistic_report">
+    <inherit name="editor_object" />
+    <alias>Ballistics Report</alias>
+    <description>The lab report matches the recovered 9mm to the bullet that killed Daniel Cross.</description>
+    <take />
+  </object>
+  <object name="blood_sample">
+    <inherit name="editor_object" />
+    <alias>Blood Sample</alias>
+    <description>A sealed vial from the broken glass at Cross's loft.</description>
+    <take />
+  </object>
+  <object name="dna_report">
+    <inherit name="editor_object" />
+    <alias>DNA Report</alias>
+    <description>The lab confirms the blood on the glass belongs to Marcus Vega.</description>
+    <take />
+  </object>
+  <object name="coroner_report">
+    <inherit name="editor_object" />
+    <alias>Coroner Report</alias>
+    <description>Dr. Harlan's report fixes time of death and confirms the shot was fired at close range.</description>
+    <take />
+  </object>
+  <object name="cctv_still">
+    <inherit name="editor_object" />
+    <alias>CCTV Still</alias>
+    <description>A grainy frame showing Vega leaving Alameda Pawn near the murder window.</description>
+    <take />
+  </object>
+  <object name="phone_data">
+    <inherit name="editor_object" />
+    <alias>Decrypted Phone Data</alias>
+    <description>Recovered messages arrange a dockside meeting after Cross was killed.</description>
+    <take />
+  </object>
+  <object name="shipping_manifest">
+    <inherit name="editor_object" />
+    <alias>Shipping Manifest</alias>
+    <description>A forged manifest links Vega, the warehouse crate, and a smuggled pistol shipment.</description>
+    <take />
+  </object>
+  <object name="pier_ticket_stub">
+    <inherit name="editor_object" />
+    <alias>Pier Ticket Stub</alias>
+    <description>A torn ticket stamped minutes after the murder, placing Vega at the escape route.</description>
+    <take />
+  </object>
+  <command name="UnlockLocker">
+    <pattern>unlock locker</pattern>
+    <script>
+      if (case_state.locker_opened = true) {
+        msg ("The gun locker is already open.")
+      }
+      else if (Got(evidence_key)) {
+        msg ("You unlock the gun locker and sign out the murder weapon.")
+        MoveObject (murder_weapon, player)
+        CollectEvidence (murder_weapon, 10)
+        case_state.locker_opened = true
+      }
+      else {
+        msg ("It's locked tight.")
+      }
+    </script>
+  </command>
+  <command name="SearchComputer">
+    <pattern>search #text#</pattern>
+    <script>
+      if (player.parent = car) {
+        if (LCase(text) = "marcus vega") {
+          msg ("Search returns: Marcus Vega — address flagged: 221B Alameda (north of here).")
+          if (case_state.vega_located = false) {
+            create exit ("221B Alameda", street, suspects_apartment)
+            case_state.vega_located = true
+          }
+        }
+        else {
+          msg ("No results found.")
+        }
+      }
+      else {
+        msg ("You need the in-car computer.")
+      }
+    </script>
+  </command>
+  <command name="SearchDumpster">
+    <pattern>search dumpster</pattern>
+    <script>
+      if (player.parent = alley) {
+        if (case_state.dumpster_checked = true) {
+          msg ("You've already searched the dumpster. Nothing useful remains.")
+        }
+        else {
+        msg ("You dig and find a crumpled paper with '221B Alameda' written — matches Vega's last known.")
+        msg ("You also find a discarded access card of some kind.")
+        AddToInventory (access_card)
+        CollectEvidence (access_card, 5)
+        case_state.dumpster_checked = true
+        if (case_state.vega_located = false) {
+          create exit ("221B Alameda", street, suspects_apartment)
+          case_state.vega_located = true
+        }
+        }
+      }
+      else {
+        msg ("Not here.")
+      }
+    </script>
+  </command>
+  <command name="UseAccessCard">
+    <pattern>use access card</pattern>
+    <script>
+      UseCard
+    </script>
+  </command>
+  <command name="OpenSafe">
+    <pattern>enter code #text#</pattern>
+    <script><![CDATA[
+      if (player.parent = suspects_apartment) {
+        if (text = "5439") {
+          if (case_state.safe_opened = false) {
+            msg ("Safe clicks open — inside is incriminating suspect mail tying Vega to motive.")
+            MoveObject (suspect_mail, player)
+            CollectEvidence (suspect_mail, 10)
+            case_state.safe_opened = true
+            case_state.motive_established = true
+          }
+          else {
+            msg ("It's already open.")
+          }
+        }
+        else {
+          msg ("Wrong code.")
+          game.wrong_code_attempts = game.wrong_code_attempts + 1
+          if (game.wrong_code_attempts > 3) {
+            msg ("Perhaps go back and speak to Captain Morales, maybe he can give you some clues.")
+          }
+        }
+      }
+      else {
+        msg ("No safe here.")
+      }
+    ]]></script>
+  </command>
+  <command name="PresentEvidence">
+    <pattern>present evidence</pattern>
+    <script>
+      if (player.parent = precinct) {
+        PresentCase
+      }
+      else {
+        msg ("You need to be at the precinct to present evidence.")
+      }
+    </script>
+  </command>
+  <command name="Search">
+    <pattern>search</pattern>
+    <script>
+      if (player.parent = car) {
+        msg ("Search who? Try checking your case file.")
+      }
+      else {
+        msg ("What are you trying to search?")
+      }
+    </script>
+  </command>
+  <command name="ExamineBody">
+    <pattern>examine body</pattern>
+    <script>
+      if (player.parent = morgue) {
+        if (case_state.morgue_seen = false) {
+          msg ("Dr. Harlan walks you through the wounds. Cross was shot at close range, but there is bruising on the knuckles and a trace of glass dust in one sleeve. He signs over the coroner report.")
+          MoveObject (coroner_report, player)
+          CollectEvidence (coroner_report, 10)
+          case_state.morgue_seen = true
+        }
+        else {
+          msg ("You already have Harlan's report.")
+        }
+      }
+      else {
+        msg ("There is no body to examine here.")
+      }
+    </script>
+  </command>
+  <command name="SwabGlass">
+    <pattern>swab glass</pattern>
+    <script>
+      if (player.parent = crime_scene) {
+        if (Got(blood_sample)) {
+          msg ("You already collected the sample from the glass.")
+        }
+        else {
+          msg ("You bag the broken glass and pull a clean blood sample from the rim.")
+          MoveObject (blood_sample, player)
+          CollectEvidence (blood_sample, 10)
+          case_state.crime_scene_processed = true
+        }
+      }
+      else {
+        msg ("There is no glass worth swabbing here.")
+      }
+    </script>
+  </command>
+  <command name="DustFingerprints">
+    <pattern>dust fingerprints</pattern>
+    <script>
+      if (player.parent = forensic_lab) {
+        if (not Got(murder_weapon)) {
+          msg ("You need the recovered weapon before the lab can lift prints.")
+        }
+        else if (case_state.fingerprints_done = false) {
+          msg ("Powder blooms across the pistol grip. One clean thumbprint lifts under the tape.")
+          MoveObject (fingerprint_lift, player)
+          CollectEvidence (fingerprint_lift, 10)
+          case_state.fingerprints_done = true
+        }
+        else {
+          msg ("The pistol has already been processed for prints.")
+        }
+      }
+      else {
+        msg ("You need a lab bench for that.")
+      }
+    </script>
+  </command>
+  <command name="CompareBallistics">
+    <pattern>compare ballistics</pattern>
+    <script>
+      if (player.parent = forensic_lab) {
+        if (not Got(murder_weapon)) {
+          msg ("You need the recovered weapon before you can compare ballistics.")
+        }
+        else if (case_state.ballistics_done = false) {
+          msg ("The striations line up. The 9mm from the locker fired the bullet that killed Cross.")
+          MoveObject (ballistic_report, player)
+          CollectEvidence (ballistic_report, 10)
+          case_state.ballistics_done = true
+        }
+        else {
+          msg ("The ballistics report is already in your case folder.")
+        }
+      }
+      else {
+        msg ("You need the forensic lab for that.")
+      }
+    </script>
+  </command>
+  <command name="ProcessDNA">
+    <pattern>process dna</pattern>
+    <script>
+      if (player.parent = forensic_lab) {
+        if (not Got(blood_sample)) {
+          msg ("You need a biological sample to process.")
+        }
+        else if (case_state.dna_done = false) {
+          msg ("The blood on the glass matches Marcus Vega's military medical file.")
+          MoveObject (dna_report, player)
+          CollectEvidence (dna_report, 10)
+          case_state.dna_done = true
+        }
+        else {
+          msg ("The DNA work is already complete.")
+        }
+      }
+      else {
+        msg ("You need the forensic lab for that.")
+      }
+    </script>
+  </command>
+  <command name="SearchCCTV">
+    <pattern>search cctv</pattern>
+    <script>
+      if (player.parent = cctv_hub) {
+        if (case_state.cctv_done = false) {
+          msg ("You scrub through hours of pawn-shop footage until the tape coughs up Vega leaving through the back with a wrapped parcel. The timestamp sits inside the murder window.")
+          MoveObject (cctv_still, player)
+          CollectEvidence (cctv_still, 10)
+          case_state.cctv_done = true
+          if (case_state.warehouse_unlocked = false) {
+            msg ("A stencil on the parcel points to the Seventh Street Warehouse.")
+            create exit ("warehouse", street, warehouse)
+            case_state.warehouse_unlocked = true
+          }
+        }
+        else {
+          msg ("You already pulled the useful CCTV still.")
+        }
+      }
+      else {
+        msg ("You need access to the CCTV closet.")
+      }
+    </script>
+  </command>
+  <command name="DecryptPhone">
+    <pattern>decrypt phone</pattern>
+    <script>
+      if (player.parent = forensic_lab) {
+        if (not Got(burner_phone)) {
+          msg ("You need the burner phone first.")
+        }
+        else if (case_state.phone_decrypted = false) {
+          msg ("The lab coaxes the phone back to life. Deleted messages point to a meeting at the pier after Cross was killed.")
+          MoveObject (phone_data, player)
+          CollectEvidence (phone_data, 10)
+          case_state.phone_decrypted = true
+        }
+        else {
+          msg ("The burner phone has already been decrypted.")
+        }
+      }
+      else {
+        msg ("You need the forensic lab for that.")
+      }
+    </script>
+  </command>
+  <command name="SearchWarehouse">
+    <pattern>search warehouse</pattern>
+    <script>
+      if (player.parent = warehouse) {
+        if (case_state.warehouse_searched = false) {
+          msg ("Inside the marked crate you find a forged shipping manifest and a trail of dock receipts. Vega was moving guns through Cross's gallery shipments.")
+          MoveObject (shipping_manifest, player)
+          CollectEvidence (shipping_manifest, 10)
+          case_state.warehouse_searched = true
+          if (case_state.pier_unlocked = false) {
+            create exit ("pier", warehouse, pier)
+            case_state.pier_unlocked = true
+          }
+        }
+        else {
+          msg ("The warehouse has already given up its paperwork.")
+        }
+      }
+      else {
+        msg ("No warehouse to search here.")
+      }
+    </script>
+  </command>
+  <command name="SearchPier">
+    <pattern>search pier</pattern>
+    <script>
+      if (player.parent = pier) {
+        if (case_state.pier_searched = false) {
+          msg ("Under the payphone you find a torn ferry ticket, still damp, stamped minutes after the shooting. It puts Vega on the escape route.")
+          MoveObject (pier_ticket_stub, player)
+          CollectEvidence (pier_ticket_stub, 10)
+          case_state.pier_searched = true
+        }
+        else {
+          msg ("The pier is picked clean.")
+        }
+      }
+      else {
+        msg ("No pier to search here.")
+      }
+    </script>
+  </command>
+  <object name="envelope">
+    <inherit name="editor_object" />
+    <alias>Envelope</alias>
+    <look><![CDATA[It’s a birthday card envelope, still sealed, sent to Marcus Vega’s daughter. The sender’s handwriting is uneven but careful.<br/><br/>Perhaps you can see if there are any clues inside. {command:Open Envelope}]]></look>
+    <take />
+  </object>
+  <command name="SearchDresser">
+    <pattern>search dresser</pattern>
+    <script><![CDATA[
+      if (player.parent = suspects_apartment) {
+        msg ("You slide the drawer open and find an unopened envelope tucked beneath some old shirts. The back is stamped <b>“RETURN TO SENDER”</b>. The front is addressed to Rosalie Vega.<br/>The postmark is dated <b>May 4, 1955</b> — the same as the girl’s birthday mentioned in the case file.")
+      }
+      if (player.parent = suspects_apartment) {
+        if (not Got(envelope)) {
+          AddToInventory (envelope)
+        }
+      }
+      else {
+        msg ("There is no drawer to search here.")
+      }
+    ]]></script>
+  </command>
+  <command name="OpenEnvelope">
+    <pattern>open envelope</pattern>
+    <script><![CDATA[
+      msg ("You carefully open the brittle flap and slide out a card. The front reads <b>“Happy 16th Birthday.”</b> Inside, the handwriting is shaky but heartfelt: <b>“I wish I could see you again, Rosie. Maybe someday you’ll understand.”</b>")
+    ]]></script>
+  </command>
+  <object name="access_card">
+    <inherit name="editor_object" />
+    <alias>CCTV Access Card</alias>
+    <drop />
+    <take />
+    <feature_usegive />
+    <use type="script">
+      UseCard
+    </use>
+  </object>
+  <function name="CollectEvidence" parameters="obj, points">
+    if (HasBoolean(obj,"_credited") = false or GetBoolean(obj,"_credited") = false) {
+      set (obj, "_credited", true)
+      case_state.evidence_found = case_state.evidence_found + 1
+      game.evidence_found = case_state.evidence_found
+      IncreaseScore (points)
+    }
+  </function>
+  <function name="PresentCase">
+    if (game.evidence_found >= game.evidence_goal and Got(murder_weapon) and Got(suspect_mail) and Got(ballistic_report) and Got(fingerprint_lift) and Got(dna_report) and Got(cctv_still) and Got(phone_data) and Got(coroner_report) and Got(shipping_manifest) and Got(pier_ticket_stub)) {
+      msg ("You lay out the weapon, prints, ballistics, blood match, phone data, CCTV still, coroner report, motive mail, warehouse manifest, and pier ticket. Morales reads it twice, then gives one hard nod. 'That is a case, Detective. Vega doesn't walk away from this.'")
+      finish
+    }
+    else {
+      msg ("Morales studies the folder and shuts it. 'This is smoke, Detective. Bring me the whole fire: means, motive, forensics, timeline, and escape route.'")
+    }
+  </function>
+  <function name="TalkToCaptain"><![CDATA[
+    if (Got(case_file)) {
+      if (game.evidence_found >= game.evidence_goal) {
+        PresentCase
+      }
+      else if (not GetBoolean(game, "spoke_morales")) {
+        msg ("You brief Morales with the case file. He sighs and hands you the evidence key.")
+        MoveObject (evidence_key, player)
+        set (game, "spoke_morales", true)
+      }
+      else if (game.wrong_code_attempts > 3) {
+        msg ("Captain Morales says, 'Good find on the safe. Maybe try something that means something to Vega, like a significant event or a birthday.'")
+      }
+      else {
+        msg ("Captain Morales says, 'Get moving, detective.'")
+      }
+    }
+    else {
+      msg ("'Find your case file first,' Morales says.")
+    }
+  ]]></function>
+  <function name="cctv_desc">
+    if (cctv_hub.locked = true) {
+      msg ("Glass cases of sad guitars and pawned dreams. A bell dings as you enter. The owner eyes you warily. West returns to the street. A back door leads to a {object:cctv_hub:CCTV closet} (locked).")
+    }
+    else {
+      msg ("Glass cases of sad guitars and pawned dreams. A bell dings as you enter. The owner eyes you warily. West returns to the street. A back door leads to a {object:cctv_hub:CCTV closet} (unlocked). Inside, you can search the CCTV.")
+    }
+  </function>
+  <function name="UseCard">
+    if (not Got(access_card)) {
+      msg ("You need the access card first.")
+    }
+    else if (player.parent = pawn_shop) {
+      if (cctv_hub.locked = true) {
+        cctv_hub.locked = false
+        case_state.cctv_unlocked = true
+        msg ("You scan the access card, unlocking the door to the CCTV Closet.")
+        create exit ("CCTV Hub", pawn_shop, cctv_hub)
+      }
+      else {
+        msg ("The CCTV closet is already unlocked.")
+      }
+    }
+    else {
+      msg ("There is nothing to scan the card on.")
+    }
+  </function>
+</asl>

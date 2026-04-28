@@ -73,11 +73,19 @@
       "patterns": [
         {
           "name": "meta.quest.text-processor.link.asl",
-          "match": "\\{(object|command|exit|page|once|notfirst|random|either):[^}]+\\}"
+          "match": "\\{(object|command|exit|page|rndalt|popup|here|nothere|select|img|counter):[^}]+\\}"
+        },
+        {
+          "name": "meta.quest.text-processor.once.asl",
+          "begin": "\\{(once|notfirst|random):",
+          "end": "\\}",
+          "patterns": [
+            { "include": "#textProcessor" }
+          ]
         },
         {
           "name": "meta.quest.text-processor.conditional.asl",
-          "begin": "\\{(if|if not|else if|else|firsttime):",
+          "begin": "\\{(if not|if|else if|else|firsttime|either|eval|=):",
           "end": "\\}",
           "patterns": [
             { "include": "#strings" },
@@ -87,6 +95,10 @@
             { "include": "#functionCalls" },
             { "include": "#variables" }
           ]
+        },
+        {
+          "name": "meta.quest.text-processor.format.asl",
+          "match": "\\{(b|i|u|s|colour|color|back):[^}]+\\}"
         },
         {
           "name": "meta.quest.text-processor.directive.asl",
@@ -135,11 +147,11 @@
         },
         {
           "name": "support.function.builtin.asl",
-          "match": "(?i)\\b(msg|msgto|ask|show|hide|goto|move|create|destroy|set|setvar|setstring|displaytext|displaymenu|showmenu|ShowMenu|ShowRoomDescription|ClearScreen|clear|debug|error|finish|pause|wait|playwav|playmidi|JS|OutputText|Template|DynamicTemplate|GetBoolean|GetString|GetInt|GetObject|GetAttribute|SetObjectFlagOn|SetObjectFlagOff|SetTimeout|SetTurnTimeout|AddToInventory|RemoveFromInventory|MoveObject|MoveObjectHere|CloneObject|CloneObjectAndMove|ListCombine|NewStringList|NewObjectList|StringListItem|ObjectListItem|DictionaryAdd|DictionaryRemove|ListCount|StartsWith|EndsWith|Contains|LengthOf|LCase|UCase|CapFirst|ToString|ToInt|ToDouble|Split|Join|Instr|Replace|Mid|Left|Right|RandomChance|GetRandomInt|PickOneString|PickOneObject)\\b"
+          "match": "(?i)\\b(msg|msgto|OutputText|OutputTextNoBr|ask|ShowMenu|showmenu|ShowRoomDescription|ClearScreen|clear|SetFontName|SetFontSize|SetForegroundColour|SetBackgroundColour|SetLinkForegroundColour|SetPanelContents|ShowPicture|picture|playwav|playmidi|show|hide|goto|move|create|destroy|set|setvar|setstring|displaytext|displaymenu|debug|error|finish|pause|wait|JS|request|undo|invoke|rundelegate|do|MoveObject|MoveObjectHere|Clone|CloneObject|CloneObjectAndMove|CloneObjects|CreateBiExits|LockExit|UnlockExit|ExitIsAvailable|SetTimeout|SetTurnTimeout|SetTimerScript|DisableTimer|EnableTimer|SuppressTurnscripts|EnableTurnscripts|NewList|NewObjectList|NewStringList|ListAdd|ListRemove|ListCount|ListItem|IndexOf|Contains|ListContains|FilterByAttribute|ListCombine|StringListSort|ListExclude|ListSort|ListUnique|ObjectListSort|StringListItem|ObjectListItem|NewDictionary|DictionaryAdd|DictionaryRemove|DictionaryItem|DictionaryCount|DictionaryContains|DictionaryKeys|DictionaryValues|GetAttribute|HasAttribute|HasBoolean|HasString|HasInt|HasObject|HasScript|HasStringDictionary|GetBoolean|GetString|GetInt|GetObject|SetObjectFlagOn|SetObjectFlagOff|ToString|ToInt|ToDouble|TypeOf|Equal|IsDefined|IsNumeric|Abs|Sin|Cos|Tan|Sqrt|Max|Min|Round|Ceiling|Floor|GetRandomInt|GetRandomDouble|PickOneObject|PickOneString|PickOneUnique|DiceRoll|RandomChance|AllObjects|AllRooms|AllExits|ScopeInventory|ScopeReachable|ScopeVisible|ScopeReachableNotHeld|ScopeReachableForTake|Split|Join|Replace|LCase|UCase|LengthOf|Trim|StartsWith|EndsWith|Instr|InstrRev|Mid|Left|Right|CapFirst|AddToInventory|RemoveFromInventory|Got|IsAvailable|SwitchOn|SwitchOff|IncreaseScore|IncreaseHealth|IncreaseMoney|GetDisplayName|TryTake|TryDrop|Template|DynamicTemplate|Eval|GetFileData|RunDelegateFunction|RequestSave|RequestUndo)\\b"
         },
         {
           "name": "storage.type.asl",
-          "match": "(?i)\\b(boolean|double|int|integer|object|string|script|list|dictionary|stringlist|objectlist|exit|command|function|delegate)\\b"
+          "match": "(?i)\\b(boolean|double|int|integer|object|string|script|list|dictionary|stringlist|objectlist|stringdictionary|objectdictionary|exit|command|function|delegate)\\b"
         },
         {
           "name": "constant.language.boolean.asl",
@@ -173,4 +185,3 @@
     }
   }
 }
-

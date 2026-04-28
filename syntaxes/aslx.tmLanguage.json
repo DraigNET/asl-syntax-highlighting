@@ -70,7 +70,7 @@
       "patterns": [
         {
           "name": "meta.element.text.aslx",
-          "begin": "(<)(description|look|alias|prefix|suffix|alt|pattern|text|template|dynamictemplate|value|key|category|cover|author|version|firstpublished|gameid|location|pov)\\b([^>]*>)",
+          "begin": "(<)(description|look|alias|prefix|suffix|alt|pattern|text|template|dynamictemplate|value|key|category|cover|author|version|firstpublished|gameid|location|pov|title|subtitle)\\b([^>]*>)",
           "beginCaptures": {
             "1": { "name": "punctuation.definition.tag.begin.xml" },
             "2": { "name": "entity.name.tag.text.aslx" },
@@ -129,15 +129,27 @@
       "patterns": [
         {
           "name": "meta.quest.text-processor.link.aslx",
-          "match": "\\{(object|command|exit|page|once|notfirst|random|either):[^}]+\\}"
+          "match": "\\{(object|command|exit|page|rndalt|popup|here|nothere|select|img|counter):[^}]+\\}"
+        },
+        {
+          "name": "meta.quest.text-processor.once.aslx",
+          "begin": "\\{(once|notfirst|random):",
+          "end": "\\}",
+          "patterns": [
+            { "include": "#textProcessor" }
+          ]
         },
         {
           "name": "meta.quest.text-processor.conditional.aslx",
-          "begin": "\\{(if|if not|else if|else|firsttime):",
+          "begin": "\\{(if not|if|else if|else|firsttime|either|eval|=):",
           "end": "\\}",
           "patterns": [
             { "include": "source.asl" }
           ]
+        },
+        {
+          "name": "meta.quest.text-processor.format.aslx",
+          "match": "\\{(b|i|u|s|colour|color|back):[^}]+\\}"
         },
         {
           "name": "meta.quest.text-processor.directive.aslx",
@@ -161,11 +173,11 @@
       "patterns": [
         {
           "name": "entity.name.tag.quest.aslx",
-          "match": "(?<=</?)(asl|library|include|template|dynamictemplate|verbtemplate|function|command|verb|type|game|object|exit|walkthrough|timer|turnscript|implied|delegate|javascript|editor|tab|control|resource|inherit|attr|item|key|value|statusattributes|displayverbs|take|drop|locked|scenery|feature_usegive|showcompass|showplaces|showobjects|showscore)(?=\\s|/?>)"
+          "match": "(?<=</?)(asl|library|include|template|dynamictemplate|verbtemplate|function|command|verb|type|game|object|exit|walkthrough|timer|turnscript|implied|delegate|javascript|editor|tab|control|resource|inherit|attr|item|statusattributes|displayverbs|inventoryverbs|take|drop|locked|scenery|feature_usegive|feature_transparent|feature_container|feature_switchable|feature_lightsource|showcompass|showplaces|showobjects|showscore|showinventory|start|pov|score|script|startscript|changedscript|speak|use|give|action|param|timeout|interval|enabled|finishaction|usedefaultprefix)(?=\\s|/?>)"
         },
         {
           "name": "entity.other.attribute-name.quest.aslx",
-          "match": "\\b(name|type|parent|to|alias|pattern|unresolved|template|parameters|return|enabled|changed|inherit|src|language|version|author|category|displayverbs|inventoryverbs|ref)\\b(?=\\s*=)"
+          "match": "\\b(name|type|parent|to|from|alias|pattern|unresolved|template|parameters|return|enabled|changed|inherit|src|language|version|author|category|displayverbs|inventoryverbs|ref|expression|element|property|object|timeout|interval|function|anonymous|value|default)\\b(?=\\s*=)"
         },
         {
           "name": "constant.language.boolean.aslx",
