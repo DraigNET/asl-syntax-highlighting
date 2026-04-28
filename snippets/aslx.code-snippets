@@ -1,0 +1,55 @@
+{
+  "ASLX game": {
+    "prefix": "aslx-game",
+    "body": [
+      "<?xml version=\"1.0\"?>",
+      "<asl version=\"550\">",
+      "  <include ref=\"English.aslx\" />",
+      "  <include ref=\"Core.aslx\" />",
+      "",
+      "  <game name=\"${1:game_name}\">",
+      "    <gameid>${2:00000000-0000-0000-0000-000000000000}</gameid>",
+      "    <version>${3:1.0}</version>",
+      "    <firstpublished>${4:2026}</firstpublished>",
+      "  </game>",
+      "",
+      "  <object name=\"${5:room}\">",
+      "    <inherit name=\"editor_room\" />",
+      "    <object name=\"player\">",
+      "      <inherit name=\"defaultplayer\" />",
+      "    </object>",
+      "  </object>",
+      "</asl>"
+    ],
+    "description": "Create a minimal Quest ASLX game file."
+  },
+  "Object": {
+    "prefix": "object",
+    "body": [
+      "<object name=\"${1:object_name}\">",
+      "  <inherit name=\"${2:editor_object}\" />",
+      "  <alias>${3:display name}</alias>",
+      "  <look>${4:Description.}</look>",
+      "</object>"
+    ],
+    "description": "Create a Quest ASLX object."
+  },
+  "Function": {
+    "prefix": "function",
+    "body": [
+      "<function name=\"${1:FunctionName}\" parameters=\"${2:}\"${3:}>",
+      "  ${4:msg (\"Text\")}",
+      "</function>"
+    ],
+    "description": "Create a Quest ASLX function."
+  },
+  "Script": {
+    "prefix": "script",
+    "body": [
+      "<script>",
+      "  ${1:msg (\"Text\")}",
+      "</script>"
+    ],
+    "description": "Create a Quest ASLX script block."
+  }
+}

@@ -1,11 +1,74 @@
 {
-    "scopeName": "text.xml.aslx",
-    "name": "ASLX",
-    "fileTypes": ["aslx"],
-    "firstLineMatch": "<\\?xml|<asl|<!--",
-    "patterns": [
+  "name": "Quest ASLX",
+  "scopeName": "text.xml.aslx",
+  "fileTypes": ["aslx"],
+  "firstLineMatch": "^\\s*(<\\?xml\\b|<(asl|library)\\b)",
+  "patterns": [
+    { "include": "#scriptElements" },
+    { "include": "#cdataScript" },
+    { "include": "#questTags" },
+    { "include": "text.xml" }
+  ],
+  "repository": {
+    "scriptElements": {
+      "patterns": [
         {
-            "include": "text.xml"
+          "name": "meta.element.script.aslx",
+          "begin": "(<)(script|startscript|changedscript|enter|leave|beforeenter|beforeleave|description|look|take|drop|use|speak|give|command|verb|function|turnscript|timer|walkthrough|expression)\\b([^>]*>)",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.tag.begin.xml" },
+            "2": { "name": "entity.name.tag.script.aslx" },
+            "3": {
+              "name": "meta.tag.attributes.xml",
+              "patterns": [
+                { "include": "text.xml" }
+              ]
+            }
+          },
+          "end": "(</)(\\2)(\\s*>)",
+          "endCaptures": {
+            "1": { "name": "punctuation.definition.tag.begin.xml" },
+            "2": { "name": "entity.name.tag.script.aslx" },
+            "3": { "name": "punctuation.definition.tag.end.xml" }
+          },
+          "contentName": "source.asl",
+          "patterns": [
+            { "include": "#cdataScript" },
+            { "include": "text.xml" },
+            { "include": "source.asl" }
+          ]
         }
-    ]
+      ]
+    },
+    "cdataScript": {
+      "name": "string.unquoted.cdata.aslx",
+      "begin": "<!\\[CDATA\\[",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.string.begin.xml" }
+      },
+      "end": "\\]\\]>",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.xml" }
+      },
+      "patterns": [
+        { "include": "source.asl" }
+      ]
+    },
+    "questTags": {
+      "patterns": [
+        {
+          "name": "entity.name.tag.quest.aslx",
+          "match": "(?<=</?)(asl|library|include|template|dynamictemplate|verbtemplate|function|command|verb|type|game|object|exit|walkthrough|timer|turnscript|implied|delegate|javascript|editor|tab|control|resource|inherit)(?=\\s|/?>)"
+        },
+        {
+          "name": "entity.other.attribute-name.quest.aslx",
+          "match": "\\b(name|type|parent|to|alias|pattern|unresolved|template|parameters|return|enabled|changed|inherit|src|language|version|author|category|displayverbs|inventoryverbs)\\b(?=\\s*=)"
+        },
+        {
+          "name": "variable.other.placeholder.aslx",
+          "match": "#[A-Za-z_][A-Za-z0-9_]*#"
+        }
+      ]
+    }
+  }
 }

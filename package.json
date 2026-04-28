@@ -2,7 +2,7 @@
   "name": "quest-asl",
   "displayName": "Quest ASL",
   "description": "Syntax highlighting for Quest ASL and ASLX files",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "publisher": "DraigNETStudios",
   "icon": "images/icon.png",
   "repository": {
@@ -20,15 +20,25 @@
     "languages": [
       {
         "id": "asl",
-        "aliases": ["Quest ASL", "asl"],
-        "extensions": [".asl"],
-        "configuration": "./language-configuration.json",
-        "tmScope": "source.asl",
-        "path": "./syntaxes/asl.tmLanguage.json"
+        "aliases": [
+          "Quest ASL",
+          "asl"
+        ],
+        "extensions": [
+          ".asl"
+        ],
+        "configuration": "./language-configuration.json"
       },
       {
-        "id": "xml",
-        "extensions": [".aslx"]
+        "id": "aslx",
+        "aliases": [
+          "Quest ASLX",
+          "aslx"
+        ],
+        "extensions": [
+          ".aslx"
+        ],
+        "configuration": "./language-configuration-aslx.json"
       }
     ],
     "grammars": [
@@ -38,17 +48,28 @@
         "path": "./syntaxes/asl.tmLanguage.json"
       },
       {
-        "contentName": "text.xml",
-        "scopeName": "text.xml.aslx", 
+        "language": "aslx",
+        "scopeName": "text.xml.aslx",
         "path": "./syntaxes/aslx.tmLanguage.json",
-        "injectTo": ["text.xml"],
         "embeddedLanguages": {
+          "source.asl": "asl",
           "text.xml": "xml"
         }
+      }
+    ],
+    "snippets": [
+      {
+        "language": "asl",
+        "path": "./snippets/asl.code-snippets"
+      },
+      {
+        "language": "aslx",
+        "path": "./snippets/aslx.code-snippets"
       }
     ]
   },
   "devDependencies": {
-    "@types/vscode": "^1.60.0"
+    "@types/vscode": "^1.60.0",
+    "@vscode/vsce": "^3.9.1"
   }
 }

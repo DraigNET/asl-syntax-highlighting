@@ -1,65 +1,48 @@
 # Quest ASL Syntax Highlighting
 
-This extension provides syntax highlighting for the **Quest Adventure Script Language** (`.asl` and `.aslx` files). Quest is a text-based game engine used to create interactive fiction games, and this extension adds support for its scripting language inside Visual Studio Code.
+Syntax highlighting and editing support for Quest Adventure Script Language files in Visual Studio Code.
 
 ## Features
 
-- Syntax highlighting for the ASL Language (`.asl`)
-- Syntax highlighting for ASLX (`.aslx`)
-- Supports Quest scripting keywords, commands, variables, and more
-- Includes highlighting for comments, keywords, variables, and string literals
+- Syntax highlighting for legacy Quest ASL files (`.asl`)
+- XML highlighting for Quest ASLX files (`.aslx`)
+- Embedded Quest script highlighting inside common ASLX script elements
+- Highlighting for Quest text processor placeholders, formatting codes, and expressions
+- Language configuration for comments, brackets, pairs, and folding
+- Starter snippets for common ASL and ASLX blocks
 
-## Installation
+## Supported Files
 
-### Visual Studio Code Marketplace
-
-1. Open [Adventure Script Language on the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=DraigNETStudios.quest-asl).
-2. Click **Install** to install the extension.
-
-### Manual Installation
-
-1. Download the `.vsix` file from the extension's repository or your local build.
-2. In VS Code, go to the Extensions view (Ctrl+Shift+X).
-3. Click the ellipsis (`...`) at the top-right of the Extensions view.
-4. Select **Install from VSIX...** and choose the downloaded `.vsix` file.
+- `.asl` - legacy Quest ASL source
+- `.aslx` - Quest 5 XML game and library source
 
 ## Usage
 
-Once installed, the extension will automatically enable syntax highlighting for files with the following extensions:
+Open any `.asl` or `.aslx` file and VS Code will select the matching Quest language mode automatically.
 
-- `.asl` for ASL files
-- `.aslx` for ASLX files
+The extension includes snippets for common constructs. Start typing prefixes such as `define-game`, `define-room`, `aslx-game`, `object`, `function`, or `script` to insert them.
 
-When you open a `.asl` or `.aslx` file, you should immediately see syntax highlighting specific to Quest scripting.
+## Development
 
-## Contributing
+To try the extension locally:
 
-Feel free to contribute to the extension! If you'd like to help improve or add new features, submit a pull request. Any suggestions or bug reports are welcome.
+1. Open this folder in VS Code.
+2. Press `F5` or run the `Extension` launch configuration.
+3. Open a `.asl` or `.aslx` file in the extension development host window.
 
-### How to Contribute
+Before packaging, validate the JSON files:
 
-1. Fork the repository.
-2. Create a new branch for your changes.
-3. Make your changes.
-4. Open a pull request with a description of your changes.
+```powershell
+node -e "for (const f of ['package.json','syntaxes/asl.tmLanguage.json','syntaxes/aslx.tmLanguage.json','language-configuration.json','language-configuration-aslx.json','snippets/asl.code-snippets','snippets/aslx.code-snippets']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('JSON OK')"
+```
 
-## License
-
-This extension is open-source and available under the [MIT License](LICENSE).
+Package with `vsce package` if you have `@vscode/vsce` installed.
 
 ## Credits
 
-- [Quest Documentation](https://docs.textadventures.co.uk/quest/) – for the Quest scripting language reference
-- Visual Studio Code – for being an awesome platform for development
+- [Quest documentation](https://docs.textadventures.co.uk/quest/) for the ASL/ASLX language reference
+- Visual Studio Code for the extension APIs and TextMate grammar support
 
-## Issues
+## License
 
-If you encounter any issues, please feel free to [create an issue](https://github.com/Xlithan/asl-syntax-highlighting/issues) on GitHub.
-
-## Publisher
-
-This extension is published by [DraigNET Studios](https://github.com/Xlithan).
-
----
-
-Thank you for using the **Quest ASL Syntax Highlighting** extension! We hope it enhances your Quest game development experience in Visual Studio Code.
+MIT

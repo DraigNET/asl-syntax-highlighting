@@ -1,0 +1,47 @@
+{
+  "Define game": {
+    "prefix": "define-game",
+    "body": [
+      "define game <${1:game_name}>",
+      "  asl-version <${2:550}>",
+      "  game version <${3:1.0}>",
+      "  game author <${4:author}>",
+      "  start <${5:start_room}>",
+      "end define"
+    ],
+    "description": "Create a legacy Quest ASL game block."
+  },
+  "Define room": {
+    "prefix": "define-room",
+    "body": [
+      "define room <${1:room_name}>",
+      "  look <${2:Room description.}>",
+      "end define"
+    ],
+    "description": "Create a legacy Quest ASL room block."
+  },
+  "Define object": {
+    "prefix": "define-object",
+    "body": [
+      "define object <${1:object_name}>",
+      "  alias <${2:display name}>",
+      "  look <${3:Object description.}>",
+      "end define"
+    ],
+    "description": "Create a legacy Quest ASL object block."
+  },
+  "If block": {
+    "prefix": "if",
+    "body": [
+      "if (${1:condition}) {",
+      "  ${2:msg(\"Text\")}",
+      "}"
+    ],
+    "description": "Create a Quest script if block."
+  },
+  "Message": {
+    "prefix": "msg",
+    "body": "msg (\"${1:Text}\")",
+    "description": "Print a message."
+  }
+}
