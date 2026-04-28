@@ -1,8 +1,8 @@
 {
   "name": "quest-asl",
-  "displayName": "Quest ASL",
-  "description": "Syntax highlighting for Quest ASL and ASLX files",
-  "version": "1.0.9",
+  "displayName": "Quest ASLX",
+  "description": "Syntax highlighting for Quest ASLX files",
+  "version": "1.0.14",
   "publisher": "DraigNETStudios",
   "icon": "images/icon.png",
   "repository": {
@@ -19,17 +19,6 @@
   "contributes": {
     "languages": [
       {
-        "id": "asl",
-        "aliases": [
-          "Quest ASL",
-          "asl"
-        ],
-        "extensions": [
-          ".asl"
-        ],
-        "configuration": "./language-configuration.json"
-      },
-      {
         "id": "aslx",
         "aliases": [
           "Quest ASLX",
@@ -43,7 +32,6 @@
     ],
     "grammars": [
       {
-        "language": "asl",
         "scopeName": "source.asl",
         "path": "./syntaxes/asl.tmLanguage.json"
       },
@@ -52,21 +40,46 @@
         "scopeName": "text.xml.aslx",
         "path": "./syntaxes/aslx.tmLanguage.json",
         "embeddedLanguages": {
-          "source.asl": "asl",
           "text.xml": "xml"
         }
       }
     ],
     "snippets": [
       {
-        "language": "asl",
-        "path": "./snippets/asl.code-snippets"
-      },
-      {
         "language": "aslx",
         "path": "./snippets/aslx.code-snippets"
       }
-    ]
+    ],
+    "configurationDefaults": {
+      "editor.tokenColorCustomizations": {
+        "textMateRules": [
+          {
+            "scope": "entity.name.tag.xml.quest.aslx",
+            "settings": {
+              "foreground": "#7EE787"
+            }
+          },
+          {
+            "scope": "entity.name.tag.xml.script.aslx",
+            "settings": {
+              "foreground": "#D2A8FF"
+            }
+          },
+          {
+            "scope": "entity.other.attribute-name.xml.quest.aslx",
+            "settings": {
+              "foreground": "#79C0FF"
+            }
+          },
+          {
+            "scope": "string.unquoted.element.xml.aslx",
+            "settings": {
+              "foreground": "#A5D6FF"
+            }
+          }
+        ]
+      }
+    }
   },
   "devDependencies": {
     "@types/vscode": "^1.60.0",
